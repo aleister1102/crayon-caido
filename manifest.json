@@ -1,0 +1,29 @@
+{
+  "id": "crayon",
+  "name": "Crayon Colorizer",
+  "version": "0.1.0",
+  "description": "Colorizes requests using the same rules as Request Colorizer and exposes context-menu batch actions.",
+  "author": {
+    "name": "insomnia1102",
+    "email": "marucube35@gmail.com",
+    "url": "https://github.com/aleister1102/crayon-caido"
+  },
+  "plugins": [
+    {
+      "kind": "frontend",
+      "id": "crayon-frontend",
+      "name": "Crayon Context Menu",
+      "entrypoint": "dist/frontend/index.js",
+      "backend": {
+        "id": "crayon-backend"
+      }
+    },
+    {
+      "kind": "backend",
+      "id": "crayon-backend",
+      "name": "Crayon Colorizer Backend",
+      "runtime": "javascript",
+      "entrypoint": "dist/backend/index.js"
+    }
+  ]
+}

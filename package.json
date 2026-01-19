@@ -1,0 +1,28 @@
+{
+  "name": "crayon",
+  "version": "1.0.0",
+  "description": "Crayon plugin that mirrors the Request Colorizer workflow with context-menu batch coloring.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "package": "node scripts/package.mjs"
+  },
+  "keywords": [
+    "caido",
+    "plugin",
+    "colorizer"
+  ],
+  "author": "Caido Plugin Automations",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@caido/sdk-backend": "^0.54.1",
+    "@caido/sdk-frontend": "^0.54.1"
+  },
+  "devDependencies": {
+    "@caido-community/dev": "^0.1.6",
+    "@types/node": "^25.0.5",
+    "typescript": "^5.9.3"
+  }
+}
