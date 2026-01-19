@@ -1,6 +1,6 @@
 {
   "name": "crayon",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "Crayon plugin that mirrors the Request Colorizer workflow with context-menu batch coloring.",
   "main": "index.js",
   "scripts": {

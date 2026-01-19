@@ -1,7 +1,7 @@
 {
   "id": "crayon",
   "name": "Crayon Colorizer",
-  "version": "0.1.0",
+  "version": "1.0.4",
   "description": "Colorizes requests using the same rules as Request Colorizer and exposes context-menu batch actions.",
   "author": {
     "name": "insomnia1102",
