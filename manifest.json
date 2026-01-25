@@ -2,7 +2,7 @@
   "id": "crayon",
   "name": "Crayon Colorizer",
   "version": "1.0.4",
-  "description": "Colorizes requests using the same rules as Request Colorizer and exposes context-menu batch actions.",
+  "description": "Automated and manual HTTP traffic coloring with batch context-menu actions and a settings UI.",
   "author": {
     "name": "insomnia1102",
     "email": "marucube35@gmail.com",

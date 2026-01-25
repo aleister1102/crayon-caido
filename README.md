@@ -1,10 +1,10 @@
 # Crayon Colorizer
 
-Caido plugin for automated and manual HTTP traffic coloring. Mirrors the "Request Colorizer" workflow logic with extended support for context-menu batch operations and a dedicated settings UI.
+Automated and manual HTTP traffic coloring with batch context-menu actions and a settings UI.
 
 ## Domain Context
 
-- **Workflow Parity**: Implements the same coloring rules as the standard Request Colorizer workflow.
+- **Rule-Based Coloring**: Implements automated coloring rules based on response metadata (status, content-type).
 - **Batch Processing**: Allows colorizing multiple selected requests simultaneously via context menus.
 - **Auto-Coloring**: Background poller identifies and colors new history items based on response metadata.
 

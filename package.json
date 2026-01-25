@@ -1,7 +1,7 @@
 {
   "name": "crayon",
   "version": "1.0.4",
-  "description": "Crayon plugin that mirrors the Request Colorizer workflow with context-menu batch coloring.",
+  "description": "Automated and manual HTTP traffic coloring with batch context-menu actions and a settings UI.",
   "main": "index.js",
   "scripts": {
     "build": "caido-dev build",
