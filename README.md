@@ -69,3 +69,27 @@ bun run package
 ```
 
 The resulting `dist/plugin_package.zip` can be installed directly into Caido.
+
+## Releasing
+
+To publish a new version of the plugin, follow these steps:
+
+1. **Bump Version**: Update the version in `package.json` and `manifest.json`.
+   ```json
+   "version": "1.0.x"
+   ```
+2. **Commit and Push**:
+   ```bash
+   git add package.json manifest.json
+   git commit -m "chore: bump version to 1.0.x"
+   git push origin main
+   ```
+3. **Create Tag**: Push a tag matching `v*` to trigger the release workflow.
+   ```bash
+   git tag v1.0.x
+   git push origin v1.0.x
+   ```
+4. **Automated Release**: GitHub Actions will automatically:
+   - Build the plugin.
+   - Sign the package using the `PRIVATE_KEY` secret.
+   - Create a new GitHub release with the signed `plugin_package.zip`.
