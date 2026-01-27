@@ -1,6 +1,6 @@
 {
   "name": "crayon",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Automated and manual HTTP traffic coloring with batch context-menu actions and a settings UI.",
   "main": "index.js",
   "scripts": {

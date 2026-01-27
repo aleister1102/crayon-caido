@@ -8,7 +8,7 @@ export default defineConfig({
   id,
   name: "Crayon Colorizer",
   description: "Colorizes requests with JSON/XML/HTML and status-aware rules, plus batch/context menu actions.",
-  version: "1.0.5",
+  version: "1.0.6",
   author: {
     name: "insomnia1102",
     email: "marucube35@gmail.com",
