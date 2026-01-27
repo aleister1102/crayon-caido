@@ -27,7 +27,10 @@ Crayon/
 │   ├── backend/
 │   │   └── src/index.ts      # Poller logic, GraphQL mutations, RPC handlers
 │   └── frontend/
-│       └── index.ts          # Settings UI (caido.ui), Command/Menu registration
+│       ├── index.ts          # Settings slot registration, command/menu setup
+│       └── src/
+│           └── components/
+│               └── Configuration.vue # Vue settings UI + preview
 ├── dist/                     # Compiled JavaScript (QuickJS compatible)
 ├── scripts/
 │   └── package.mjs           # Plugin packaging script
@@ -53,7 +56,7 @@ Crayon/
 
 ## Tech Stack
 
-TypeScript | Bun | Caido SDK 0.54+
+TypeScript | Vue 3 | Bun | Caido SDK 0.55+
 
 ## Build & Package
 

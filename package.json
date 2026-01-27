@@ -1,6 +1,6 @@
 {
   "name": "crayon",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Automated and manual HTTP traffic coloring with batch context-menu actions and a settings UI.",
   "main": "index.js",
   "scripts": {
@@ -17,12 +17,17 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@caido/sdk-backend": "^0.54.1",
-    "@caido/sdk-frontend": "^0.54.1"
+    "@caido/primevue": "^0.3.3",
+    "@caido/sdk-backend": "^0.55.1",
+    "@caido/sdk-frontend": "^0.55.1",
+    "primevue": "^4.1.0",
+    "vue": "^3.5.27"
   },
   "devDependencies": {
     "@caido-community/dev": "^0.1.6",
     "@types/node": "^25.0.5",
-    "typescript": "^5.9.3"
+    "@vitejs/plugin-vue": "^6.0.3",
+    "typescript": "^5.9.3",
+    "vue-tsc": "^3.2.4"
   }
 }

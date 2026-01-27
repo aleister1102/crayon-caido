@@ -1,7 +1,7 @@
 {
   "id": "crayon",
   "name": "Crayon Colorizer",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Automated and manual HTTP traffic coloring with batch context-menu actions and a settings UI.",
   "author": {
     "name": "insomnia1102",
