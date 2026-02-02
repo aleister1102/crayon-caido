@@ -2,6 +2,16 @@
 
 import type { APISDK, SDK } from "caido:plugin";
 
+const GET_REQUEST_METADATA_QUERY = `
+  query getRequestMetadata($id: ID!) {
+    request(id: $id) {
+      metadata {
+        id
+      }
+    }
+  }
+`;
+
 const UPDATE_METADATA_MUTATION = `
   mutation updateRequestMetadata($id: ID!, $input: UpdateRequestMetadataInput!) {
     updateRequestMetadata(id: $id, input: $input) {
@@ -338,6 +348,25 @@ function prunePending(now: number) {
   }
 }
 
+async function getMetadataId(sdk: SDK, requestId: string): Promise<string | null> {
+  try {
+    const response = await sdk.graphql.execute(GET_REQUEST_METADATA_QUERY, {
+      id: requestId,
+    });
+
+    if (response.errors && response.errors.length > 0) {
+      sdk.console.error(`Crayon: failed to get metadata for request ${requestId}`, response.errors);
+      return null;
+    }
+
+    const metadataId = response.data?.request?.metadata?.id;
+    return metadataId ?? null;
+  } catch (error: unknown) {
+    sdk.console.error(`Crayon: error getting metadata for request ${requestId}`, error);
+    return null;
+  }
+}
+
 async function applyColors(sdk: SDK, ids: string[], settings: CrayonSettings) {
   const uniqueIds = Array.from(new Set(ids.filter(Boolean)));
 
@@ -349,9 +378,15 @@ async function applyColors(sdk: SDK, ids: string[], settings: CrayonSettings) {
         continue;
       }
 
-      sdk.console.log(`[Crayon] manual color ${id} -> ${color || "clear"}`);
+      const metadataId = await getMetadataId(sdk, id);
+      if (!metadataId) {
+        sdk.console.error(`Crayon: no metadata found for request ${id}`);
+        continue;
+      }
+
+      sdk.console.log(`[Crayon] manual color ${id} (metadata: ${metadataId}) -> ${color || "clear"}`);
       const response = await sdk.graphql.execute(UPDATE_METADATA_MUTATION, {
-        id,
+        id: metadataId,
         input: { color },
       });
 
@@ -376,8 +411,13 @@ async function applyAutoColorFromResponse(
     return;
   }
 
+  const metadataId = await getMetadataId(sdk, id);
+  if (!metadataId) {
+    throw new Error(`No metadata found for request ${id}`);
+  }
+
   const result = await sdk.graphql.execute(UPDATE_METADATA_MUTATION, {
-    id,
+    id: metadataId,
     input: { color },
   });
 
