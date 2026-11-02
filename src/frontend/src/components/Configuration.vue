@@ -21,6 +21,8 @@ const htmlColor = ref(DEFAULT_SETTINGS.colors.html.slice(1));
 const status5xxColor = ref(DEFAULT_SETTINGS.colors.status5xx.slice(1));
 const status4xxColor = ref(DEFAULT_SETTINGS.colors.status4xx.slice(1));
 const status3xxColor = ref(DEFAULT_SETTINGS.colors.status3xx.slice(1));
+const websocketColor = ref(DEFAULT_SETTINGS.colors.websocket.slice(1));
+const h2cColor = ref(DEFAULT_SETTINGS.colors.h2c.slice(1));
 
 const previewColors = computed(() => ({
   json: `#${jsonColor.value}`,
@@ -29,6 +31,8 @@ const previewColors = computed(() => ({
   status5xx: `#${status5xxColor.value}`,
   status4xx: `#${status4xxColor.value}`,
   status3xx: `#${status3xxColor.value}`,
+  websocket: `#${websocketColor.value}`,
+  h2c: `#${h2cColor.value}`,
 }));
 
 onMounted(async () => {
@@ -74,6 +78,8 @@ function populateForm(settings: CrayonSettings) {
   status5xxColor.value = settings.colors.status5xx.slice(1);
   status4xxColor.value = settings.colors.status4xx.slice(1);
   status3xxColor.value = settings.colors.status3xx.slice(1);
+  websocketColor.value = settings.colors.websocket.slice(1);
+  h2cColor.value = settings.colors.h2c.slice(1);
 }
 
 async function handleSave() {
@@ -89,6 +95,8 @@ async function handleSave() {
       status5xx: `#${status5xxColor.value}`,
       status4xx: `#${status4xxColor.value}`,
       status3xx: `#${status3xxColor.value}`,
+      websocket: `#${websocketColor.value}`,
+      h2c: `#${h2cColor.value}`,
     },
   };
 
@@ -187,6 +195,24 @@ function setStatus(message: string, isError = false) {
         </div>
       </div>
 
+      <div class="crayon-section">
+        <div class="crayon-section-title">Upgrade Request Colors</div>
+        <p class="crayon-subtitle">
+          Requests with Connection: Upgrade and Upgrade: websocket or h2c take
+          priority over response colors, even before a response arrives.
+        </p>
+        <div class="crayon-grid">
+          <div class="crayon-row">
+            <label>WebSocket Upgrade</label>
+            <ColorPicker v-model="websocketColor" :disabled="loading || saving" />
+          </div>
+          <div class="crayon-row">
+            <label>h2c Upgrade</label>
+            <ColorPicker v-model="h2cColor" :disabled="loading || saving" />
+          </div>
+        </div>
+      </div>
+
       <!-- Preview Section -->
       <div class="crayon-section">
         <div class="crayon-section-title">Live Preview</div>
@@ -238,6 +264,22 @@ function setStatus(message: string, isError = false) {
             />
             <span class="crayon-preview-label">Redirect</span>
             <span class="crayon-preview-value">302 Found</span>
+          </div>
+          <div class="crayon-preview-item">
+            <div
+              class="crayon-preview-accent"
+              :style="{ backgroundColor: previewColors.websocket }"
+            />
+            <span class="crayon-preview-label">WebSocket</span>
+            <span class="crayon-preview-value">Upgrade: websocket</span>
+          </div>
+          <div class="crayon-preview-item">
+            <div
+              class="crayon-preview-accent"
+              :style="{ backgroundColor: previewColors.h2c }"
+            />
+            <span class="crayon-preview-label">h2c</span>
+            <span class="crayon-preview-value">Upgrade: h2c</span>
           </div>
         </div>
       </div>

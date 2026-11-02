@@ -7,6 +7,8 @@ export type CrayonColors = {
   status5xx: string;
   status4xx: string;
   status3xx: string;
+  websocket: string;
+  h2c: string;
 };
 
 export type CrayonSettings = {
@@ -31,5 +33,7 @@ export const DEFAULT_SETTINGS: CrayonSettings = {
     status5xx: "#a32f2a",
     status4xx: "#a06008",
     status3xx: "#8a7a06",
+    websocket: "#7c3aed",
+    h2c: "#be185d",
   },
 };
