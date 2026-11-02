@@ -43,6 +43,8 @@ type CrayonColors = {
   status5xx: string;
   status4xx: string;
   status3xx: string;
+  websocket: string;
+  h2c: string;
 };
 
 type CrayonSettings = {
@@ -59,6 +61,8 @@ const DEFAULT_SETTINGS: CrayonSettings = {
     status5xx: "#a32f2a",
     status4xx: "#a06008",
     status3xx: "#8a7a06",
+    websocket: "#7c3aed",
+    h2c: "#be185d",
   },
 };
 
@@ -66,6 +70,11 @@ type CrayonAPI = {
   applyCrayonColors(ids: string[]): Promise<void>;
   getSettings(): Promise<CrayonSettings>;
   setSettings(settings: CrayonSettings): Promise<CrayonSettings>;
+};
+
+type RequestLike = {
+  getId(): string;
+  getHeader(name: string): Array<string> | undefined;
 };
 
 type ResponseLike = {
@@ -149,7 +158,7 @@ export async function init(sdk: SDK) {
 
       const requestId = request.getId();
       try {
-        await applyAutoColorFromResponse(sdkInstance, requestId, response, settings.colors);
+        await applyAutoColor(sdkInstance, request, response, settings.colors);
       } catch (error: unknown) {
         sdkInstance.console.error(`Crayon: failed to auto-color request ${requestId}`, error);
       }
@@ -280,7 +289,7 @@ async function processNewResponses(sdk: SDK, settings: CrayonSettings) {
   for (const item of page.items) {
     const id = item.request.getId();
 
-    if (!item.response) {
+    if (!item.response && pickUpgradeColor(item.request, settings.colors) === null) {
       if (settings.autoMode) {
         trackPending(id);
       }
@@ -292,7 +301,7 @@ async function processNewResponses(sdk: SDK, settings: CrayonSettings) {
     }
 
     try {
-      await applyAutoColorFromResponse(sdk, id, item.response, settings.colors);
+      await applyAutoColor(sdk, item.request, item.response, settings.colors);
     } catch (error: unknown) {
       sdk.console.error(`Crayon: failed to auto-color request ${id}`, error);
     }
@@ -315,13 +324,12 @@ async function processPendingResponses(sdk: SDK, settings: CrayonSettings) {
     processed += 1;
 
     const record = await sdk.requests.get(id);
-    const response = record?.response;
-    if (!response) {
+    if (!record || (!record.response && pickUpgradeColor(record.request, settings.colors) === null)) {
       continue;
     }
 
     autoColorState.pending.delete(id);
-    await applyAutoColorFromResponse(sdk, id, response, settings.colors);
+    await applyAutoColor(sdk, record.request, record.response, settings.colors);
   }
 }
 
@@ -399,13 +407,14 @@ async function applyColors(sdk: SDK, ids: string[], settings: CrayonSettings) {
   }
 }
 
-async function applyAutoColorFromResponse(
+async function applyAutoColor(
   sdk: SDK,
-  id: string,
-  response: ResponseLike,
+  request: RequestLike,
+  response: ResponseLike | undefined,
   colors: CrayonColors,
 ) {
-  const color = pickColorFromResponse(response.getCode(), response.getHeader("Content-Type"), colors);
+  const id = request.getId();
+  const color = pickExchangeColor(request, response, colors);
 
   if (color === null) {
     return;
@@ -432,8 +441,46 @@ async function determineColorForRequest(
   colors: CrayonColors,
 ): Promise<string | null> {
   const record = await sdk.requests.get(id);
-  const response = record?.response;
+  if (!record) {
+    return null;
+  }
 
+  return pickExchangeColor(record.request, record.response, colors);
+}
+
+function pickUpgradeColor(request: RequestLike, colors: CrayonColors): string | null {
+  const connectionTokens = headerTokens(request.getHeader("Connection"));
+  if (!connectionTokens.includes("upgrade")) {
+    return null;
+  }
+
+  for (const protocol of headerTokens(request.getHeader("Upgrade"))) {
+    if (protocol === "websocket") {
+      return colors.websocket;
+    }
+    if (protocol === "h2c") {
+      return colors.h2c;
+    }
+  }
+
+  return null;
+}
+
+function headerTokens(values: Array<string> | undefined): string[] {
+  return (values ?? []).flatMap((value) =>
+    value.split(",").map((token) => token.trim().toLowerCase()),
+  );
+}
+
+function pickExchangeColor(
+  request: RequestLike,
+  response: ResponseLike | undefined,
+  colors: CrayonColors,
+): string | null {
+  const upgradeColor = pickUpgradeColor(request, colors);
+  if (upgradeColor !== null) {
+    return upgradeColor;
+  }
   if (!response) {
     return null;
   }
